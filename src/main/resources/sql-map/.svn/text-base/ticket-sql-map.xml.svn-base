@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL MAP 2.0//EN" 
+	"http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="TicketOrder">
+
+	<typeAlias alias="TicketOrder" type="com.aef.model.TicketOrder" />
+
+	<resultMap id="ticketResult" class="TicketOrder">
+		<result property="basketId" column="PFBasketID" />
+		<result property="orderId" column="PFOrderID" />
+		<result property="symbol" column="symbol" />
+		<result property="quantity" column="orderqty" />
+		<result property="side" column="buysell" />
+		<result property="clearingFirm" column="settle_firm" />
+	</resultMap>
+
+	<!-- To call stored procedure. Need to specify the map so it can decode the result-->
+	<procedure id="getTickets" resultClass="TicketOrder" resultMap="ticketResult">
+		pfordtran.dbo.retrieve_and_mark_corp_intraday_pf_algo_orders_details @orderManager=AEF
+	</procedure>
+
+	<!-- To call stored procedure. Need to specify the map so it can decode the result-->
+	<procedure id="getTicketsDbEmbedded" resultClass="TicketOrder" resultMap="ticketResult">
+		CALL retrieve_and_mark_corp_intraday_pf_algo_orders_details();
+	</procedure>
+
+	<!-- To call stored procedure. Need to specify the map so it can decode the result-->
+	<procedure id="getTicketsTestDB" resultClass="TicketOrder" resultMap="ticketResult">
+		pfordtran.dbo.retrieve_and_mark_corp_intraday_pf_algo_orders_details @orderManager=AEF
+	</procedure>
+
+	<parameterMap id="ticketAckMap" class="map">
+		<parameter property="orderId" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN" />
+	</parameterMap>
+	
+	<!-- change to the real name here -->
+	<procedure id="updateAck" parameterMap="ticketAckMap">
+		CALL update_ack(?);
+	</procedure>
+
+
+
+
+</sqlMap>

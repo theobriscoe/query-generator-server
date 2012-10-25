@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/resources/sql-map
+END
+query-sql-map.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/resources/sql-map/query-sql-map.xml
+END
+ticket-sql-map.xml
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/resources/sql-map/ticket-sql-map.xml
+END
+sql-map-config.xml
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/aef-ext/!svn/ver/43/trunk/query-generator-server/src/main/resources/sql-map/sql-map-config.xml
+END

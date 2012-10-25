@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/aef-ext/!svn/ver/53/trunk/query-generator-server/src/main/resources
+END
+ticket-generator-server.properties
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/resources/ticket-generator-server.properties
+END
+log4j.properties
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/resources/log4j.properties
+END
+ticket-processor.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/aef-ext/!svn/ver/53/trunk/query-generator-server/src/main/resources/ticket-processor.xml
+END
+query-generator-server.properties
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/aef-ext/!svn/ver/43/trunk/query-generator-server/src/main/resources/query-generator-server.properties
+END

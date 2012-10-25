@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/test/java/com/pva
+END
+QueryGeneratorImplTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/test/java/com/pva/QueryGeneratorImplTest.java
+END
+SampleTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/test/java/com/pva/SampleTest.java
+END
+QueryGeneratorServerIntDbEmbeddedTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/test/java/com/pva/QueryGeneratorServerIntDbEmbeddedTest.java
+END
+QueryGeneratorServerDevTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/test/java/com/pva/QueryGeneratorServerDevTest.java
+END
+QueryGeneratorServerDevSpringockitoTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/test/java/com/pva/QueryGeneratorServerDevSpringockitoTest.java
+END

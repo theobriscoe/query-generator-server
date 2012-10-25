@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) 2012 Automated Execution Framework, LLC. 
+ * See the LICENSE file for redistribution and use restrictions.
+ * 
+ * $Id: TicketGeneratorImpl.java 34 2012-02-23 00:40:40Z matt $
+ * $Author: matt $ 
+ */
+package com.aef;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Component;
+
+import com.aef.model.TicketBatch;
+import com.aef.model.TicketOrder;
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+/**
+ * This is the implementation that encodes that:
+ * <ul>
+ * 	<li> Polls the database
+ * 	<li> Creates a ticket
+ * 	<li> Pushes to a redis queue
+ * 	<li> Updates the status of the database
+ * </ul>
+ * 
+ * @author agile-development-group
+ *
+ */
+@Component
+public class TicketGeneratorImpl extends AbstractExecutionThreadService implements TicketGenerator {
+	private static final Log LOGGER = LogFactory.getLog(TicketGeneratorImpl.class);
+	
+	private Queue<TicketBatch> ticketQueue;	
+	private TicketService ticketService;
+	
+	private final AtomicLong ticketBatchSendCount = new AtomicLong();
+	private int sleepInterval = 1;
+	private int pollCount = 0;
+	private int generateCount = 0;
+	
+	protected void run() throws Exception {
+		while (isRunning()) {
+			List<TicketOrder> tickets = ticketService.getOpenTickets();
+			
+			for (TicketOrder ticketOrder: tickets) {
+				ticketOrder.setSymbol(symbolToLekFormat(ticketOrder.getSymbol()));
+			}
+			
+			if (tickets != null && !tickets.isEmpty()) {			
+				//I want to add the tickets all the tickets at once
+				TicketBatch ticketBatch = new TicketBatch(tickets);
+				addToTicketQueue(ticketBatch);
+				generateCount++;
+			}
+			pollCount++;
+			LOGGER.info(String.format("Sleeping for %d seconds....", sleepInterval));
+			TimeUnit.SECONDS.sleep(sleepInterval);
+		}
+	}
+	
+	public void addToTicketQueue(TicketBatch ticketBatch) {
+		long startTime = 0L;
+		ticketBatchSendCount.incrementAndGet();
+		// we're gonna let Redis do the serialization..
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("Adding to queue: %s", ticketBatch));
+			startTime = System.nanoTime();
+		}
+		ticketQueue.add(ticketBatch);
+		if (LOGGER.isDebugEnabled()) {
+			long elapsed = System.nanoTime() - startTime; 
+			LOGGER.debug(String.format("Time to add to queue: %s", DurationFormatUtils.formatDurationHMS(elapsed / 1000000)));
+		}
+	}
+	
+	public Queue<TicketBatch> getTicketQueue() {
+		return ticketQueue;
+	}
+
+	public TicketService getTicketService() {
+		return ticketService;
+	}
+
+	public void setTicketService(TicketService ticketService) {
+		this.ticketService = ticketService;
+	}
+
+	public void setTicketQueue(Queue<TicketBatch> ticketQueue) {
+		this.ticketQueue = ticketQueue;
+	}
+
+	/**
+	 * @return the count
+	 */
+	public long getTicketBatchSendCount() {
+		return ticketBatchSendCount.get();
+	}
+
+	/**
+	 * @param sleepInterval the sleepInterval to set
+	 */
+	public void setSleepInterval(int sleepInterval) {
+		this.sleepInterval = sleepInterval;
+	}
+	
+	public int getSleepInterval() {
+		return sleepInterval;
+	}
+
+	public int getPollCount() {
+		return pollCount;
+	}
+
+	public void setPollCount(int pollCount) {
+		this.pollCount = pollCount;
+	}
+
+	public int getGenerateCount() {
+		return generateCount;
+	}
+
+	public void setGenerateCount(int generateCount) {
+		this.generateCount = generateCount;
+	}
+
+	public String symbolToLekFormat(String symbol) {
+		return symbol;
+	}
+}

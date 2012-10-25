@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/resources/spring
+END
+applicationContext-ticket-generator-server.xml
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/resources/spring/applicationContext-ticket-generator-server.xml
+END
+applicationContext-query-generator-server.xml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/resources/spring/applicationContext-query-generator-server.xml
+END

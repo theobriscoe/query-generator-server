@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL MAP 2.0//EN" 
+	"http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Price">
+
+	<typeAlias alias="Price" type="com.pva.model.Price" />
+
+	<resultMap id="priceResult" class="Price">
+		<result property="symbol" column="PFSymbol" />
+		<result property="timestamp" column="PFTimestamp" />
+		<result property="price" column="PFprice" />
+	</resultMap>
+
+	<!-- To call stored procedure. Need to specify the map so it can decode the result-->
+	<procedure id="getPrices" resultClass="Price" resultMap="priceResult">
+		pfordtran.dbo.retrieve_and_mark_corp_intraday_pf_algo_orders_details @orderManager=AEF
+	</procedure>
+
+	<!-- To call stored procedure. Need to specify the map so it can decode the result-->
+	<procedure id="getPricesDbEmbedded" resultClass="Price" resultMap="priceResult">
+		CALL retrieve_and_mark_corp_intraday_pf_algo_orders_details();
+	</procedure>
+
+	<!-- To call stored procedure. Need to specify the map so it can decode the result-->
+	<procedure id="getPricesTestDB" resultClass="Price" resultMap="priceResult">
+		pfordtran.dbo.retrieve_and_mark_corp_intraday_pf_algo_orders_details @orderManager=AEF
+	</procedure>
+
+
+</sqlMap>

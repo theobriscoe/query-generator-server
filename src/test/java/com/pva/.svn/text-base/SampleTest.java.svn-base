@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2012 Automated Execution Framework, LLC. 
+ * See the LICENSE file for redistribution and use restrictions.
+ * 
+ * $Id$
+ * $Author$ 
+ */
+package com.pva;
+
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.pva.TimeSeriesService;
+import com.pva.model.Price;
+
+/**
+ * @author agile-development-group
+ * 
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class SampleTest {
+
+	@Mock
+	private TimeSeriesService timeSeriesService;
+	
+	@Before
+	public void setUp() {
+		// set up by annotation
+		//ticketService = mock(TicketService.class);
+	}
+	
+	@Test
+	public void testGetOpenTickets() {
+		List<Price> prices = new ArrayList<Price>();
+		
+		when(timeSeriesService.getPrices()).thenReturn(prices);
+		
+		assertNotNull(timeSeriesService.getPrices());
+		
+		verify(timeSeriesService).getPrices();
+	}
+}

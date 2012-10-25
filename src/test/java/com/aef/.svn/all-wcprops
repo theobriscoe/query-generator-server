@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/aef-ext/!svn/ver/43/trunk/query-generator-server/src/test/java/com/aef
+END
+TicketGeneratorServerIntDbEmbeddedTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketGeneratorServerIntDbEmbeddedTest.java
+END
+TicketGeneratorServerDevTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketGeneratorServerDevTest.java
+END
+TicketGeneratorServerIntProdDbTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketGeneratorServerIntProdDbTest.java
+END
+TicketServiceImplTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketServiceImplTest.java
+END
+TestTools.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/aef-ext/!svn/ver/43/trunk/query-generator-server/src/test/java/com/aef/TestTools.java
+END
+TicketGeneratorImplTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketGeneratorImplTest.java
+END
+TicketGeneratorServerIntTestDbTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketGeneratorServerIntTestDbTest.java
+END
+TicketGeneratorServerDevSpringockitoTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketGeneratorServerDevSpringockitoTest.java
+END
+TicketGeneratorServerIntNoDbTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketGeneratorServerIntNoDbTest.java
+END
+TicketAckProcessorIntDbEmbeddedTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/java/com/aef/TicketAckProcessorIntDbEmbeddedTest.java
+END

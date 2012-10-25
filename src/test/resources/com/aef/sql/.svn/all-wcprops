@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/resources/com/aef/sql
+END
+db-schema.sql
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/resources/com/aef/sql/db-schema.sql
+END
+db-test-data.sql
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/test/resources/com/aef/sql/db-test-data.sql
+END

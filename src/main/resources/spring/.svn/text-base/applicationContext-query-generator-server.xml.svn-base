@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!--
+		Notice the spring-beans-3-1.xsd defined in the schema location. You need this for the profile property in bean
+	-->
+
+	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
+	<context:property-placeholder location="classpath:query-generator-server.properties" />
+	<context:annotation-config />
+
+	<!-- We're not doing a component scan b/c we're illustrating the IoC binding explicitly -->
+	<!--	<context:component-scan base-package="com.aef" />-->
+
+	<bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}" />
+
+	<bean id="timeSeriesJsonSerializer" class="com.pva.model.TimeSeriesJsonSerializer" />
+
+	<!-- <bean id="ticketAckJsonSerializer" class="com.aef.model.TicketAckJsonSerializer" />  -->
+
+	<!-- We're using a specialized serializer -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate" p:connection-factory-ref="redisConnectionFactory"
+		p:valueSerializer-ref="timeSeriesJsonSerializer" />
+
+	<!-- <bean id="ticketAckRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+		p:connection-factory-ref="redisConnectionFactory" p:valueSerializer-ref="ticketAckJsonSerializer" /> -->
+
+	<bean id="timeSeriesQueueName" class="java.lang.String">
+		<constructor-arg value="${ticket.queue.name}" />
+	</bean>
+
+	<bean id="ticketQueueName" class="java.lang.String">
+		<constructor-arg value="${ticket.queue.name}" />
+	</bean>
+
+	<bean id="ticketAckQueueName" class="java.lang.String">
+		<constructor-arg value="${ticket.ack.queue.name}" />
+	</bean>
+	 
+	<beans profile="dev">
+		<bean id="queryGenerator" class="com.pva.QueryGeneratorImpl">
+			<property name="timeSeriesQueue" ref="timeSeriesQueue" />
+		</bean>
+		<!-- This is used for testing -->
+		<bean id="timeSeriesQueue" class="com.pva.model.TimeSeriesQueue" />
+		<!--  we don't set any properties here so we can test it using mocks -->
+		<bean id="timeSeriesService" class="com.pva.TimeSeriesServiceImpl" />
+	</beans>
+	
+	<beans profile="int-no-db">
+		<bean id="ticketGenerator" class="com.aef.TicketGeneratorImpl">
+			<property name="ticketQueue" ref="ticketQueue" />
+		</bean>
+		<bean id="ticketService" class="com.aef.TicketServiceImpl" />
+
+		<bean id="ticketQueue" class="org.springframework.data.redis.support.collections.DefaultRedisList">
+			<constructor-arg ref="redisTemplate" />
+			<constructor-arg value="${ticket.queue.name}" />
+		</bean>
+
+		<!-- This one is a standard String KV Template used to get test results -->
+		<bean id="testRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+			p:connection-factory-ref="redisConnectionFactory" />
+
+	</beans>
+
+	<beans profile="int-db-embedded">
+		<!-- Create an H2 embedded database -->
+		<bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+			<constructor-arg>
+				<bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+					<property name="driverClass" value="org.h2.Driver" />
+					<property name="url" value="jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=2" />
+				</bean>
+			</constructor-arg>
+		</bean>
+
+		<!-- Use spring to initialize out embedded DB -->
+		<jdbc:initialize-database data-source="dataSource">
+			<jdbc:script location="classpath:com/pva/sql/db-schema.sql" />
+			<jdbc:script location="classpath:com/pva/sql/db-test-data.sql" />
+		</jdbc:initialize-database>
+
+		<!-- FOR REFERENCE -->
+		<!-- http://www.developersbook.com/ibatis/iBatis-tutorials/iBatis-tutorials.php -->
+		<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+			<property name="configLocation" value="classpath:sql-map/sql-map-config.xml" />
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+
+		<!--  Start defining our objects -->
+		<bean id="queryGenerator" class="com.pva.QueryGeneratorImpl">
+			<property name="timeSeriesQueue" ref="timeSeriesQueue" />
+			<property name="timeSeriesService" ref="timeSeriesService" />
+		</bean>
+	
+		<!-- This is used for testing -->
+		<!--  we don't set any properties here so we can test it using mocks -->
+		<bean id="timeSeriesService" class="com.pva.TimeSeriesServiceImpl">
+			<property name="sqlMapClient" ref="sqlMapClient" />
+			<property name="listName" value="Price.getPricesDbEmbedded" />
+		</bean>
+		<bean id="timeSeriesQueue" class="org.springframework.data.redis.support.collections.DefaultRedisList">
+			<constructor-arg ref="redisTemplate" />
+			<constructor-arg value="${ticket.queue.name}" />
+		</bean>
+		<bean id="testRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+			p:connection-factory-ref="redisConnectionFactory" />
+	</beans>
+
+	<beans profile="int-test-db">
+		<!-- Define the real data source here -->
+		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${jdbc.driverClassName}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+
+		</bean>
+
+		<!-- FOR REFERENCE -->
+		<!-- http://www.developersbook.com/ibatis/iBatis-tutorials/iBatis-tutorials.php -->
+		<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+			<property name="configLocation" value="classpath:/sql-map/sql-map-config.xml" />
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+
+		<bean id="ticketGenerator" class="com.aef.TicketGeneratorImpl">
+			<property name="ticketQueue" ref="ticketQueue" />
+			<property name="ticketService" ref="ticketService" />
+		</bean>
+
+		<bean id="ticketQueue" class="org.springframework.data.redis.support.collections.DefaultRedisList">
+			<constructor-arg ref="redisTemplate" />
+			<constructor-arg value="${ticket.queue.name}" />
+		</bean>
+
+		<bean id="ticketService" class="com.aef.TicketServiceImpl">
+			<property name="sqlMapClient" ref="sqlMapClient" />
+			<property name="listName" value="TicketOrder.getTicketsTestDB" />
+		</bean>
+
+		<!-- This one is a standard String KV Template used to get test results -->
+		<bean id="testRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+			p:connection-factory-ref="redisConnectionFactory" />
+	</beans>
+
+	<beans profile="prod">
+		<!-- Define the real data source here -->
+		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${jdbc.driverClassName}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+		</bean>
+
+		<!-- FOR REFERENCE -->
+		<!-- http://www.developersbook.com/ibatis/iBatis-tutorials/iBatis-tutorials.php -->
+		<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+			<property name="configLocation" value="classpath:/sql-map/sql-map-config.xml" />
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+
+		<bean id="ticketAckProcessor" class="com.aef.TicketAckProcessorImpl">
+			<property name="ticketAckQueue" ref="ticketAckQueue" />
+			<property name="ticketService" ref="ticketService" />
+		</bean>
+		<bean id="ticketAckQueue" class="org.springframework.data.redis.support.collections.DefaultRedisList">
+			<constructor-arg ref="ticketAckRedisTemplate" />
+			<constructor-arg value="${ticket.ack.queue.name}" />
+		</bean>
+
+		<bean id="ticketGenerator" class="com.aef.TicketGeneratorImpl">
+			<property name="ticketQueue" ref="ticketQueue" />
+			<property name="ticketService" ref="ticketService" />
+		</bean>
+
+		<bean id="ticketQueue" class="org.springframework.data.redis.support.collections.DefaultRedisList">
+			<constructor-arg ref="redisTemplate" />
+			<constructor-arg value="${ticket.queue.name}" />
+		</bean>
+
+		<bean id="ticketService" class="com.aef.TicketServiceImpl">
+			<property name="sqlMapClient" ref="sqlMapClient" />
+		</bean>
+
+		<!-- This one is a standard String KV Template used to get test results -->
+		<bean id="testRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+			p:connection-factory-ref="redisConnectionFactory" />
+
+	</beans>
+
+	<beans profile="prodTest">
+		<!-- Define the real data source here -->
+		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${jdbc.driverClassName}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+		</bean>
+
+		<!-- FOR REFERENCE -->
+		<!-- http://www.developersbook.com/ibatis/iBatis-tutorials/iBatis-tutorials.php -->
+		<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+			<property name="configLocation" value="classpath:/sql-map/sql-map-config.xml" />
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+
+		<bean id="ticketGenerator" class="com.aef.TicketGeneratorImpl">
+			<property name="ticketQueue" ref="ticketQueue" />
+			<property name="ticketService" ref="ticketService" />
+		</bean>
+
+		<bean id="ticketQueue" class="org.springframework.data.redis.support.collections.DefaultRedisList">
+			<constructor-arg ref="redisTemplate" />
+			<constructor-arg value="${ticket.queue.name}" />
+		</bean>
+
+		<bean id="ticketService" class="com.aef.TicketServiceImpl">
+			<property name="sqlMapClient" ref="sqlMapClient" />
+			<property name="listName" value="TicketOrder.getTicketsTestDB" />
+		</bean>
+
+		<!-- This one is a standard String KV Template used to get test results -->
+		<bean id="testRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+			p:connection-factory-ref="redisConnectionFactory" />
+	</beans>
+
+
+
+	<beans>
+
+	</beans>
+
+</beans>

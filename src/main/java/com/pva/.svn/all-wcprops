@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/aef-ext/!svn/ver/51/trunk/query-generator-server/src/main/java/com/pva
+END
+QueryGenerator.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/aef-ext/!svn/ver/50/trunk/query-generator-server/src/main/java/com/pva/QueryGenerator.java
+END
+QueryGeneratorImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/aef-ext/!svn/ver/51/trunk/query-generator-server/src/main/java/com/pva/QueryGeneratorImpl.java
+END
+TimeSeriesService.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/java/com/pva/TimeSeriesService.java
+END
+TimeSeriesServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/java/com/pva/TimeSeriesServiceImpl.java
+END

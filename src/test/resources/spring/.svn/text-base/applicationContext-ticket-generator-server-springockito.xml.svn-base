@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:mockito="http://www.mockito.org/spring/mockito"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+			http://www.mockito.org/spring/mockito https://bitbucket.org/kubek2k/springockito/raw/tip/springockito/src/main/resources/spring/mockito.xsd">
+	<!--
+		Notice the spring-beans-3-1.xsd defined in the schema location. You need this for the profile property in bean
+	-->
+
+	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
+	<context:property-placeholder location="classpath:ticket-generator-server.properties" />
+	<context:annotation-config />
+
+	<!-- We're not doing a component scan b/c we're illustrating the IoC binding explicitly -->
+	<!--	<context:component-scan base-package="com.aef" />-->
+
+	<bean id="ticketQueueName" class="java.lang.String">
+		<constructor-arg value="${ticket.queue.name}" />
+	</bean>
+
+	<bean id="ticketGenerator" class="com.aef.TicketGeneratorImpl">
+		<property name="ticketQueue" ref="ticketQueue" />
+		<property name="ticketService" ref="ticketService" />
+	</bean>
+
+	<bean id="ticketQueue" class="com.aef.model.TicketBatchQueue" />
+
+	<mockito:mock id="ticketService" class="com.aef.TicketService" />
+
+</beans>

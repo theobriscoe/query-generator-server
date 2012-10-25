@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2012 Automated Execution Framework, LLC. 
+ * See the LICENSE file for redistribution and use restrictions.
+ * 
+ * $Id$
+ * $Author$ 
+ */
+package com.aef;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+
+import java.util.List;
+import java.util.Queue;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.aef.model.TicketBatch;
+import com.aef.model.TicketOrder;
+
+/**
+ * For this test you do not need to use Spring.
+ * 
+ * Use the interface to mock other objects that are not ticket generator.
+ * 
+ * It's easier just to use the model or domain objects b/c they are just POJOs.
+ * 
+ * @author agile-development-group
+ * 
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class TicketGeneratorImplTest {
+
+	private TicketGeneratorImpl ticketGenerator;
+
+	private List<TicketOrder> ticketList;
+	private TicketBatch ticketBatch;
+
+	// just mock out the ticket service so we won't need Spring.
+	// we can use annotations for mocks
+	@Mock
+	private TicketService ticketService;
+	
+	@Mock
+	private Queue<TicketBatch> ticketQueue;
+
+	@Before
+	public void setUp() {
+		ticketGenerator = new TicketGeneratorImpl();
+
+		// ticketService was created by the annotation
+		ticketGenerator.setTicketService(ticketService);
+		// ticketQueue was created by the annotation
+		ticketGenerator.setTicketQueue(ticketQueue);
+
+		ticketList = TestTools.createTestTicketOrders();
+
+		ticketBatch = new TicketBatch(ticketList);
+	}
+
+	@Test
+	public void testAddToQueue() {
+		// this is the method under test
+		ticketGenerator.addToTicketQueue(ticketBatch);
+		
+		// you expect the queue to do an add here so you mock that
+		// operation, so verify that it was called. do this for
+		// void method returns.
+		verify(ticketQueue).add(ticketBatch);
+		
+		//-- CHECK YOUR RESULTS
+		assertEquals(1, ticketGenerator.getTicketBatchSendCount());
+		
+		// verify that you got what you expected
+		TestTools.verifyTestTicketBatch(ticketBatch);
+	}
+}

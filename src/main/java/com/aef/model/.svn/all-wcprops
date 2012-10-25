@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/java/com/aef/model
+END
+TicketBatch.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/java/com/aef/model/TicketBatch.java
+END
+TicketAck.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/java/com/aef/model/TicketAck.java
+END
+TicketAckJsonSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/java/com/aef/model/TicketAckJsonSerializer.java
+END
+TicketBatchJsonSerizalizer.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/java/com/aef/model/TicketBatchJsonSerizalizer.java
+END
+TicketOrder.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/aef-ext/!svn/ver/40/trunk/query-generator-server/src/main/java/com/aef/model/TicketOrder.java
+END

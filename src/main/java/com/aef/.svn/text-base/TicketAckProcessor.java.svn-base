@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) 2012 Automated Execution Framework, LLC. 
+ * See the LICENSE file for redistribution and use restrictions.
+ * 
+ * $Id$
+ * $Author$ 
+ */
+package com.aef;
+
+import com.google.common.util.concurrent.Service;
+
+/**
+ * @author agile-development-group
+ *
+ */
+public interface TicketAckProcessor extends Service {
+
+	int getTicketAckCount();
+}

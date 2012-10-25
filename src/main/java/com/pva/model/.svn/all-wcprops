@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/java/com/pva/model
+END
+TimeSeriesJsonSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/aef-ext/!svn/ver/42/trunk/query-generator-server/src/main/java/com/pva/model/TimeSeriesJsonSerializer.java
+END
+Price.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/aef-ext/!svn/ver/42/trunk/query-generator-server/src/main/java/com/pva/model/Price.java
+END
+TimeSeries.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/aef-ext/!svn/ver/46/trunk/query-generator-server/src/main/java/com/pva/model/TimeSeries.java
+END

@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2012 Automated Execution Framework, LLC. 
+ * See the LICENSE file for redistribution and use restrictions.
+ * 
+ * $Id: TicketServiceImplTest.java 17 2012-02-04 07:51:26Z gna $
+ * $Author: gna $ 
+ */
+package com.aef;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.aef.model.TicketOrder;
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+@RunWith(MockitoJUnitRunner.class)
+public class TicketServiceImplTest {
+
+	// this is the object under test
+	private TicketServiceImpl ticketService;
+	// you can also mock using annotations
+	@Mock
+	private SqlMapClient sqlMapClient;
+	
+	private String statementName;
+	private List<TicketOrder> ticketList;
+	
+	// NOTE: All test classes will use the ticket-generator-server.properties from test/resoures
+	//      and the log4j.properties
+
+	@Before
+	public void setUp() {
+		ticketService = new TicketServiceImpl();
+		ticketService.setSqlMapClient(sqlMapClient);
+		//this should match the name defined in resources/sql-map/ticket-sql-map.xml 
+		statementName = "TicketOrder.getTickets";
+
+		// We should not mock domain objects or POJOs
+		// its easier just to use them
+		ticketList = TestTools.createTestTicketOrders();
+	}
+	
+	@Test
+	public void testGetOpenTicketsSqlMapClient() throws SQLException {
+		when(sqlMapClient.queryForList(statementName)).thenReturn(ticketList);
+		
+		List<TicketOrder> ticketOrders = ticketService.getOpenTickets();
+		
+		// verify that it's only called once
+		verify(sqlMapClient, times(1)).queryForList(statementName);
+		
+		// make sure it's not null
+		assertNotNull(ticketOrders);
+		
+		assertEquals(ticketList.get(0), ticketOrders.get(0));
+		assertEquals(ticketList.get(1), ticketOrders.get(1));
+		assertEquals(ticketList.get(2), ticketOrders.get(2));
+	}
+	
+}

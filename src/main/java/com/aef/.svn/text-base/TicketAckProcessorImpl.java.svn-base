@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2012 Automated Execution Framework, LLC. 
+ * See the LICENSE file for redistribution and use restrictions.
+ * 
+ * $Id$
+ * $Author$ 
+ */
+package com.aef;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.springframework.stereotype.Component;
+
+import com.aef.model.TicketAck;
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+/**
+ * This is the implementation of the TickAckProcessor that:
+ * <ul>
+ * 	<li> Polls a redis queue
+ * 	<li> Updates the status of the database
+ * </ul>
+ * 
+ * @author agile-development-group
+ *
+ */
+@Component
+public class TicketAckProcessorImpl extends AbstractExecutionThreadService implements TicketAckProcessor {
+
+	private TicketService ticketService;
+	private BlockingQueue<TicketAck> ticketAckQueue;
+	private long pollInterval = 1;
+	private int ticketAckCount = 0;
+	
+	@Override
+	protected void run() throws Exception {
+
+		while (isRunning()) {
+			// we do a poll so that can can let the processor shut down correctly
+			TicketAck ticketAck = ticketAckQueue.poll(pollInterval, TimeUnit.SECONDS);
+			if (ticketAck != null) {
+				ticketService.recordTicketAck(ticketAck);
+				ticketAckCount++;
+			}
+		}
+	}
+
+	/**
+	 * @param ticketAckQueue the ticketAckQueue to set
+	 */
+	public void setTicketAckQueue(BlockingQueue<TicketAck> ticketAckQueue) {
+		this.ticketAckQueue = ticketAckQueue;
+	}
+
+	/**
+	 * @param ticketService the ticketService to set
+	 */
+	public void setTicketService(TicketService ticketService) {
+		this.ticketService = ticketService;
+	}
+
+	/**
+	 * @return the ackCount
+	 */
+	public int getTicketAckCount() {
+		return ticketAckCount;
+	}
+}
