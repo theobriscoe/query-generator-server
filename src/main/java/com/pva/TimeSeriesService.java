@@ -9,27 +9,29 @@ package com.pva;
 
 import java.util.List;
 
-import com.aef.model.TicketAck;
-import com.aef.model.TicketOrder;
 import com.pva.model.Price;
-import com.pva.model.TimeSeries;
+
+//import com.aef.model.TicketAck;
+//import com.aef.model.TicketOrder;
+//import com.pva.model.Price;
+//import com.pva.model.TimeSeries;
 
 /**
  * @author agile-development-group
  * @author Matthew Hutchison
- *
+ * 
  */
 public interface TimeSeriesService {
-	
+
 	/**
 	 * @return the list of open tickets
 	 */
-	List<Price> getPrices();	
-//	/**
-//	 * Record the ticket ack
-//	 * 
-//	 * @param ticketAck
-//	 * @return true if the ack is recorded
-//	 */
-//	boolean recordTicketAck(TicketAck ticketAck); 
+	List<Price> getPrices();
+	// /**
+	// * Record the ticket ack
+	// *
+	// * @param ticketAck
+	// * @return true if the ack is recorded
+	// */
+	// boolean recordTicketAck(TicketAck ticketAck);
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util" 
 	xsi:schemaLocation="
 			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 			http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
-			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+  			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
 	<!--
 		Notice the spring-beans-3-1.xsd defined in the schema location. You need this for the profile property in bean
@@ -18,7 +19,28 @@
 	<bean id="twapService" class="com.pva.service.TwapService">
 		<property name="redisTemplate" ref="redisTemplate" />
 	</bean>
-
+	
+	<bean id="twapMessageListener" class="com.pva.service.TwapMessageListener" />
+	
+	<bean id="channelTopic" class="org.springframework.data.redis.listener.ChannelTopic">
+		<constructor-arg value="twap:key:topic" />
+	</bean>
+	
+	<util:list id="channelTopicList">
+	<ref bean="channelTopic"/>
+	</util:list>
+	
+	<bean id="redisMessageListenerContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+		<property name="connectionFactory" ref="redisConnectionFactory"></property>
+		 <property name="messageListeners">
+            <map>
+            <entry key-ref="twapMessageListener" value-ref="channelTopicList"></entry>
+            </map>
+        </property>
+	</bean>
+	
+	
+	
 	<!-- We're not doing a component scan b/c we're illustrating the IoC binding explicitly -->
 	<!--	<context:component-scan base-package="com.aef" />-->
 

@@ -1,4 +1,4 @@
-package com.pva.db;
+package com.pva.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

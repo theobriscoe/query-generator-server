@@ -21,7 +21,7 @@ public class TwapService {
 	@Autowired
 	public RedisTemplate<String, String> redisTemplate;
 
-	public static final String CHANNEL_NAME = "TWAP_CHANNEL";
+	public static final String CHANNEL_NAME = "twap:key:topic";
 
 	// TODO: Use JSON serialization
 	public String create(Twap twap) {
